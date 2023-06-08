@@ -40,3 +40,5 @@ pl.plot(w,g)
 pl.gca().set_xlim(-10,10)
 pl.show()
 pl.close()
+
+print("Yes!")
