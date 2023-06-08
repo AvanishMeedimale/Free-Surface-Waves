@@ -1,0 +1,50 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pylab
+
+#Discretise space x
+x0 = 10.
+dx = 0.1
+xs = np.arange(-x0, x0, dx)
+
+#Defining important constants / variables
+U = 1
+rho = 1000
+g = 9.8
+alpha = 0.27
+T = (alpha * rho * U ** 4) / g
+mu = 0.001
+epsilon = -0.001
+
+#Defining pressure function
+P = epsilon * (rho * U * U) / 2 * np.exp(-5 * (g ** 2) * (xs ** 2) / (U ** 4))
+
+#Plotting the pressure distribution
+plt.plot(xs, P)
+plt.show()
+
+B = np.fft.fftshift(np.abs(np.fft.fft(P))) / np.sqrt(len(P))
+
+plt.plot(xs, B)
+plt.show()
+
+D = xs - g / U ** 2 - (T * xs ** 2) / (rho * U ** 2) - 1j * mu
+
+plt.plot(xs, D)
+plt.show()
+
+# Defining a 2D array representing the domain of the integral
+# Each entry is the domain-space is then set to the value of the integrand 
+# at that point
+integrand = np.zeros((len(xs), len(xs[xs > 0])), dtype="complex")
+for i, x in enumerate(xs):
+    for j, a in enumerate(xs[xs > 0]):
+        integrand[i][j] = np.exp(1j * a * x) * B[j] / D[j]
+        
+#Define eta (waveform) using the above integral formula
+#Trapezium rule is used
+eta = np.real(np.trapz(integrand, axis = 1))
+
+#Plotting eta, the wave form
+plt.plot(xs, eta)
+plt.show()
