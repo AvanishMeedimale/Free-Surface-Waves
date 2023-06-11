@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 
 B=np.linspace(0,1,16)
 B.shape=(8,2)
-print("ey")
 #A=np.random.rand(3,5)
 
 
